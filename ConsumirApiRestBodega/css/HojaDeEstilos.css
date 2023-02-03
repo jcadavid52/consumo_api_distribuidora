@@ -1,0 +1,67 @@
+﻿.container-grid-form {
+    display: grid;
+    grid-row-gap: 1em;
+    grid-column-gap: 1em;
+    grid-template-columns: repeat(3,1fr);
+    
+}
+
+
+/*.input-descuento-producto {
+    align-self: flex-start;
+    border: solid 1px;
+}
+
+.select-cliente {
+    border: solid 1px;
+    align-self: flex-start;
+}*/
+
+/*.boton {
+    
+    grid-column: 1/4;
+    align-self: center;
+    justify-self: center;
+}*/
+
+/*container factura modal*/
+
+.container-factura-grid {
+    display: grid;
+    grid-row-gap: 1em;
+    grid-column-gap: 5em;
+    grid-template-columns: repeat(2,1fr);
+}
+.container-info-cliente-grid {
+    display: grid;
+    grid-row-gap: 1em;
+    grid-column-gap: 1em;
+    grid-template-columns: repeat(4,1fr);
+}
+
+
+#target-infoFact{
+    
+    text-align:right;
+}
+#container-totales{
+    text-align:right;
+}
+#container-button-pdf{
+    display:none;
+}
+
+/*factura view*/
+
+.cabecera-tabla {
+    background-color: #2A2827;
+    color:antiquewhite;
+}
+
+.cuerpo-tabla {
+    background-color: #A3F3E7;
+}
+
+.titulo-negrita{
+    font-weight:bold;
+}

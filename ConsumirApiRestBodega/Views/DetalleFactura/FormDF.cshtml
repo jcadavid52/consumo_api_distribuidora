@@ -1,0 +1,675 @@
+﻿
+@{
+
+
+    ViewBag.Title = "detalleFactura";
+    List<ConsumirApiRestBodega.Models.FolderClienteModel.Clientes> clientes = ViewBag.Clientes;
+    List<ConsumirApiRestBodega.Models.FolderProductoModel.ProductoModel> productos = ViewBag.Productos;
+   // List<ConsumirApiRestBodega.Models.FolderUsuarioModel.UsuarioModel> usuarios = ViewBag.Usuarios;
+
+
+}
+
+
+<body>
+
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container-fluid px-4">
+                <h1 class="mt-4">Dashboard</h1>
+                <ol class="breadcrumb mb-4">
+                    <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+
+
+                <div class="accordion-item" style="background-color:#151414; width:1000px">
+                    <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                        <button class="accordion-button collapsed btn-dark" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                            Registrar Detalle
+                        </button>
+                    </h2>
+                </div>
+
+                @* COLLAPSE GENERAL DETALLE FACTURA *@
+
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                    <div class="accordion-body" style="background-color:#6fb1a9;">
+
+
+                        @* FORMULARIO DETALLE FACTURA *@
+                        <form id="detalleForm">
+
+                            @* CONTENEDOR GRID *@
+                            <div class="container-grid-form">
+
+
+                                @* GRUPO CONTENEDOR CANTIDAD PRODUCTO *@
+                                <div class="form-floating mb-3" id="bloque-input-cantidad">
+
+                                    <input class="form-control" id="IcantidadProducto" type="number" placeholder="New Field 8" name="cantidad" />
+                                    <label for="IcantidadProducto">Cantidad de producto</label>
+
+
+                                    <div>
+                                        <p class="mensaje__formulario-vacio">El campo cantidad no puede estar vacío</p>
+                                        <p class="mensaje__logico">El campo cantidad debe ser mayor a 0</p>
+                                    </div>
+                                </div>
+
+                                @* GRUPO CONTENEDOR DESCUENTO *@
+                                <div class="form-floating mb-3" id="bloque-input-descuento">
+
+                                    <input class="form-control" id="Idescuento" type="number" placeholder="New Field 8" data-sb-validations="required" name="descuento" />
+                                    <label for="newField8">Descuento</label>
+
+                                    <div>
+
+                                        <p class="mensaje__formulario-vacio">El campo descuento no puede estar vacío</p>
+                                        <p class="mensaje__logico">El campo descuento no puede ser menor a cero</p>
+
+                                    </div>
+
+
+                                </div>
+
+                                @* GRUPO CONTENEDOR CLIENTE *@
+
+                                <div class="form-floating mb-3" id="bloque-input-cliente">
+                                    <select class="form-select" id="SnombreCliente" aria-label="Cliente" name="cliente" onchange="validarFormulario(event)">
+
+                                        <option value="0">Seleccione</option>
+                                        @foreach (var item in clientes)
+                                        {
+
+
+                                            <option value="@item.PK_ID_CLIENTE"># -@item.PK_ID_CLIENTE- @item.NOMBRES</option>
+
+                                        }
+                                    </select>
+                                    <label for="newField1">Cliente</label>
+                                    <div>
+
+                                        <p class="mensaje__formulario-vacio">Elige una opción</p>
+
+                                    </div>
+                                </div>
+
+
+                                @* GRUPO CONTENEDOR USUARIO *@
+
+                                <div class="form-floating mb-3" id="bloque-input-usuario">
+                                    <select class="form-select" id="SfkUsuario" aria-label="New Field 1" name="usuario" onchange="validarFormulario(event)">
+
+
+
+                                        <option value="@Session["pkUser"]">@Session["pkUser"]</option>
+
+
+                                    </select>
+                                    <label for="newField1">Usuario</label>
+                                    <div>
+
+                                        <p class="mensaje__formulario-vacio">Elige una opción</p>
+
+                                    </div>
+                                </div>
+
+
+                                @* GRUPO CONTENEDOR PRODUCTO *@
+
+                                <div class="form-floating mb-3" id="bloque-input-producto">
+                                    <select class="form-select" id="SnombreProducto" aria-label="New Field 1" name="producto" onchange="validarFormulario(event)">
+                                        <option value="0">Seleccione</option>
+
+                                        @foreach (var item in productos)
+                                        {
+
+                                            <option value="@item.PK_ID_PRODUCTO">@item.NOMBRE_PRODUC</option>
+                                        }
+
+                                    </select>
+                                    <label for="newField1">Producto</label>
+                                    <div>
+
+                                        <p class="mensaje__formulario-vacio">Elige una opción</p>
+
+                                    </div>
+                                </div>
+
+
+                                @* GRUPO CONTENEDOR BOTÓN GENERAL FACTURA *@
+
+                                <div class="form-floating mb-3">
+                                    <button type="button" class="btn bg-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                        <h3 style="color:antiquewhite">Generar factura</h3>
+                                    </button>
+                                </div>
+
+
+
+
+                            </div>
+                            @* GRUPO CONTENEDOR BOTÓN GUARDAR DETALLE FACTURA *@
+                            <div style="text-align:center">
+                                <button class="btn btn-primary btn-lg " id="submitButton" type="button" onclick="validarFormulario(event)" name="boton">Guardar</button>
+
+                            </div>
+
+                        </form>
+
+
+                    </div>
+                </div>
+
+
+
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Detalle factura
+                </div>
+
+
+
+                <table id="tablax" class="table table-primary table-striped">
+                    <thead class="table table-dark">
+                        <tr>
+                            <th>Id</th>
+                            <th>Producto</th>
+                            <th>Precio unidad</th>
+                            <th>Cantidad</th>
+                            <th>SubTotal</th>
+                            <th>Total</th>
+                            <th>Iva</th>
+                            <th>Factura</th>
+                            <th>Cliente</th>
+                            <th>Vendedor</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+
+
+
+
+            </div>
+
+
+        </main>
+    </div>
+
+
+
+    <hr />
+    <hr />
+
+    <!--Modal form factura-->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+
+                        <div class="">
+                            <div class="form-floating mb-3">
+                                <select class="form-select" id="SidCliente" aria-label="New Field 1" onchange="obtenerCliente()">
+                                    <option value="0">Seleccione</option>
+
+
+
+
+                                </select>
+                                <label for="newField1">Código Cliente</label>
+                            </div>
+                        </div>
+                        <div class="">
+
+                            <div class="form-floating mb-3">
+
+
+                                <input class="form-control" id="Iobservacion" type="text" placeholder="New Field 8" data-sb-validations="required" />
+                                <label for="newField8">Observación</label>
+                                <div class="invalid-feedback" data-sb-feedback="newField8:required">New Field 8 is required.</div>
+
+                            </div>
+                        </div>
+
+                        <div class="container-info-cliente-grid" id="inputs-cliente">
+                            <div class="form-floating mb-3">
+
+
+                                <input class="form-control" id="text-nombre" type="text" placeholder="New Field 8" data-sb-validations="required" disabled />
+                                <label for="newField8">Nombre cliente</label>
+                                <div class="invalid-feedback" data-sb-feedback="newField8:required">New Field 8 is required.</div>
+
+                            </div>
+                            <div class="form-floating mb-3">
+
+
+                                <input class="form-control" id="text-apellido" type="text" placeholder="New Field 8" data-sb-validations="required" disabled />
+                                <label for="newField8">Apellido</label>
+                                <div class="invalid-feedback" data-sb-feedback="newField8:required">New Field 8 is required.</div>
+
+                            </div>
+                            <div class="form-floating mb-3">
+
+
+                                <input class="form-control" id="text-telefono" type="text" placeholder="New Field 8" data-sb-validations="required" disabled />
+                                <label for="newField8">Teléfono</label>
+                                <div class="invalid-feedback" data-sb-feedback="newField8:required">New Field 8 is required.</div>
+
+                            </div>
+                            <div class="form-floating mb-3">
+
+
+                                <input class="form-control" id="text-direccion" type="text" placeholder="New Field 8" data-sb-validations="required" disabled />
+                                <label for="newField8">Dirección</label>
+                                <div class="invalid-feedback" data-sb-feedback="newField8:required">New Field 8 is required.</div>
+
+                            </div>
+                        </div>
+                    </form>
+
+                    @* PLANTILLA DE LA FACTURA *@
+                    <div style="border:solid; padding:2em;" id="plantilla-factura">
+                        <h4>Factura</h4>
+                        <div class="container-factura-grid">
+
+                            <div id="target-emisor">
+                                <p>De:</p>
+                                <label>Bodega s.a</label>
+                            </div>
+
+                            <div id="target-infoFact">
+                                <p>Nº DE FACTURA: <span id="n-factura"></span></p>
+
+                            </div>
+                        </div>
+
+                        <table id="tablax2" class="table table-primary table-striped">
+                            <thead class="table table-dark">
+                                <tr>
+
+
+                                    <th>Producto</th>
+                                    <th>Precio unidad</th>
+                                    <th>Cantidad</th>
+                                    <th>SubTotal por unidad</th>
+                                    <th>Total por Unidad</th>
+
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+
+                        <div id="container-totales">
+                            <p>SubTotal: <span id="subtotal"></span> </p>
+                            <p>Total: <span id="total"></span> </p>
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+                </div>
+                @*footer modal*@
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="agregarFactura()">Generar</button>
+                    <div id="container-button-pdf">
+                        <button onclick="descargarPDF()">PDF</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+  
+
+    @section scripts{
+        <script>
+
+            //carga los datos de la tabla detalle factura
+
+                 $(document).ready(function(){
+
+                     document.getElementById("inputs-cliente").style.visibility = "hidden";
+                     document.getElementById("plantilla-factura").style.visibility = "hidden";
+
+                    $('#tablax').DataTable({
+
+                      "ajax": {
+                        "url": "@Url.Content("~/DetalleFactura/Datos")",
+                        "type": "POST",
+                        "datatype": "json"
+
+                      },
+                      "data": null,
+
+                       "columns": [
+                            { "data": "PK_ID_DETALLE_FACT"},
+                            { "data": "NOMBRE_PRODUC"},
+                            { "data": "PRECIO"},
+                            { "data": "CANTIDAD_PRODUCTO" },
+                            { "data": "SUBTOTAL" },
+                            { "data": "VALOR_TOTAL" },
+                            { "data": "IVA_DETALLE_FACT" },
+                            { "data": "FK_ID_FACTURA" },
+                            { "data": "NOMBRES" },
+                            { "data": "USUARIO1" }
+
+
+                        ],
+
+
+                    });
+
+
+
+
+
+
+
+                  });
+
+            //registra un nuevo detalle de factura
+            function RegistrarDetalleFactura() {
+
+                var form_data = new FormData();
+                var Url = "@Url.Content("~/DetalleFactura/insertarDetalleFactura")";
+
+                form_data.append("Cantidad_producto", $("#IcantidadProducto").val());
+                form_data.append("Descuento", $("#Idescuento").val());
+                form_data.append("Fk_id_cliente", $("#SnombreCliente").val());
+                form_data.append("Fk_id_usuario", $("#SfkUsuario").val());
+                form_data.append("Fk_id_producto", $("#SnombreProducto").val());
+                form_data.append("Fk_id_factura", $("#SnumFactura").val());
+
+                $.ajax({
+
+                    cache: false,
+                    contentType: false,
+                    method: "POST",
+                    dataType: 'JSON',
+                    url: Url,
+                    processData: false,
+                    data:form_data,
+                    success: function (data) {
+                        if (data == 1) {
+
+
+
+                            alert("Guardado con éxito");
+
+                            var table = $('#tablax').DataTable();
+
+                            table.ajax.reload(null, false);
+
+
+
+                            //refrescar combox
+
+                            llenarCombox();
+
+
+
+
+                        } else {
+                            alert("Error inesperado en el servidor! :(")
+                        }
+                    }
+
+
+                });
+
+            }
+
+            //llena los datos del cliente que aparecen en el modal cuando se elige un id de cliente
+            function obtenerCliente() {
+
+                document.getElementById("plantilla-factura").style.visibility = "hidden";
+
+                let id = document.getElementById("SidCliente").value;
+
+                if (id != 0) {
+                    var Url = "@Url.Content("~/Cliente/ObtenerCliente/")" + id;
+
+                    $.ajax({
+                        cache: false,
+                        contentType: false,
+                        method: "POST",
+                        dataType: 'JSON',
+                        url: Url,
+                        processData: false,
+                        // data: form_data,
+                        success: function (data) {
+                            if (data) {
+
+
+                                document.getElementById("inputs-cliente").style.visibility = "visible";
+
+                                $("#text-nombre").val(data.NOMBRES);
+                                $("#text-apellido").val(data.APELLIDOS);
+                                $("#text-telefono").val(data.TELEFONO);
+                                $("#text-direccion").val(data.DIRECCION);
+
+                            }
+                        }
+
+
+
+                    })
+                } else {
+
+                    document.getElementById("inputs-cliente").style.visibility = "hidden";
+
+                    document.getElementById("plantilla-factura").style.visibility = "hidden";
+                }
+            }
+
+            //agrega la factura y se muestra la plantilla con los datos que compro el cliente
+            function agregarFactura() {
+
+                let id = document.getElementById("SidCliente").value;
+
+                if (id == "0") {
+
+                    alert("No haz elegido el código del cliente")
+
+                } else {
+
+                    //url:metodo donde llegan los datos en el servidor
+                     var Url = "@Url.Content("~/DetalleFactura/insertarFactura")";
+
+                    //envia datos para agregar factura
+                    var form_data = new FormData();
+
+
+                    form_data.append("fk_cliente", $("#SidCliente").val());
+                    form_data.append("informe_venta", $("#Iobservacion").val());
+
+                    $.ajax({
+
+                        cache: false,
+                        contentType: false,
+                        method: "POST",
+                        type: 'JSON',
+                        url: Url,
+                        processData: false,
+                        data: form_data,
+                        success: function (data) {
+
+                            console.log(data)
+                            //console.log(JSON.stringify(data.mensaje))
+
+
+
+                            var response = JSON.stringify(data);
+
+
+
+                            if (response != 1 && response != 0) {
+
+
+
+                                var pk_factura = JSON.stringify(data.id_factura[0]);
+
+
+
+                                alert("tu factura se ha registrado");
+
+                                //aparece el boton pdf
+                                mostrarBotonPdf();
+
+
+                                var table = $('#tablax').DataTable();
+
+                                table.ajax.reload(null, false);
+
+                                var table2 = $('#tablax2').DataTable();
+
+                                table2.destroy();
+
+                                var uri = "@Url.Content("~/DetalleFactura/ObtenerFactura/")" + pk_factura;
+
+                                 //una vez agregado los datos se llena la plantilla
+                                //////////////////////////////////////////////////////////////////////////////////////
+                                var productos = [];
+
+                                fetch(uri)
+                                    .then(function (res) {
+                                        return res.json();
+                                    })
+                                    .then(function (data) {
+                                        console.log(data);
+
+                                        productos = data.datosTablaFactura;
+
+                                        document.getElementById("subtotal").innerHTML = data.subTotal;
+                                        document.getElementById("total").innerHTML = data.total;
+                                        document.getElementById("n-factura").innerHTML = data.codigo_factura;
+
+
+                                        $('#tablax2').DataTable({
+
+
+                                            data: productos,
+
+                                            columns: [
+                                                { data: "nombre_producto" },
+                                                { data: "precio_unidad" },
+                                                { data: "cantidad" },
+                                                { data: "SubTotal_por_unidad" },
+                                                { data: "Total_por_Unidad" },
+                                            ]
+
+
+
+                                        });
+                                    })
+
+
+                                ////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+                                document.getElementById("plantilla-factura").style.visibility = "visible";
+
+
+                            } else if (response == 0) {
+
+                                alert("El cliente no tiene productos pendientes por facturar")
+                            }
+                            else {
+
+                                alert("Error en el servidor, estamos trabajando para solucionarlo lo más pronto :(")
+                            }
+
+
+
+
+
+
+
+
+
+
+                        }
+
+
+                    });
+
+
+
+                }
+
+
+            }
+
+            //llena los combox existentes solo en la data table, no en la tabla de clientes
+            function llenarCombox() {
+
+
+            fetch("@Url.Content("~/DetalleFactura/CodigosCliente")")
+                .then(function (res) {
+
+                    return res.json();
+                })
+
+                .then(function (miJson) {
+                    document.getElementById("SidCliente").innerHTML = "";
+
+                    document.getElementById("SidCliente").innerHTML = document.getElementById("SidCliente").innerHTML +
+                        '<option value="' + 0 + '">' + "Seleccione" + '</option>'
+                    for (let i = 0; i < miJson.length; i++) {
+
+                        document.getElementById("SidCliente").innerHTML = document.getElementById("SidCliente").innerHTML +
+                            '<option value="' + miJson[i].FK_ID_CLIENTE + '">' + miJson[i].FK_ID_CLIENTE+'</option>'
+
+                    }
+
+
+
+
+                })
+            }
+
+            function descargarPDF() {
+
+                let id_fact = document.getElementById("n-factura").innerHTML;
+               // console.log(id_fact)
+
+                window.location.href = "@Url.Content("~/DetalleFactura/print/")" + id_fact;
+            }
+
+            (llenarCombox)()
+
+
+        </script>
+
+        <script src="~/Scripts/ValidarCampos.js"></script>
+
+
+
+    }
+</body>
+
+

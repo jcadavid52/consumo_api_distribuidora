@@ -1,0 +1,28 @@
+﻿.mensaje__formulario-vacio{
+    margin:0;
+    font-size:12px;
+    font-weight:bold;
+    color:red;
+    display:none;
+   
+}
+.mensaje__formulario-vacio-activo {
+    display: block;
+}
+
+.mensaje__logico {
+    margin: 0;
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+    display: none;
+}
+
+.mensaje__logico-activo {
+    display: block;
+}
+
+#bloque-input-usuario {
+    display: none;
+}
+
